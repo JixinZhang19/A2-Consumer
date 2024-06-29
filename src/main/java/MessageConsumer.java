@@ -28,24 +28,23 @@ public class MessageConsumer implements Runnable {
     public void run() {
         try {
             Channel channel = connection.createChannel();
-            // 多消费者时公平性保证
-            channel.basicQos(1);
+            // 多消费者时公平性保证，增加整体的 deliver rate
+            // todo: tuning prefetchSize
+            channel.basicQos(10);
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-                processMessage(message);
-                // todo: 需要手动确认吗？
-//                try {
-//                    processMessage(message);
-//                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-//                } catch (Exception e) {
-//                    System.err.println("Error: re-put message to RabbitMQ!");
-//                    channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, true);
-//                }
+                try {
+                    processMessage(message);
+                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                } catch (Exception e) {
+                    System.err.println("Error: re-put message to RabbitMQ!");
+                    channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, true);
+                }
             };
 
             // String basicConsume(String queueName, boolean autoAck, DeliverCallback deliverCallback, CancelCallback cancelCallback) throws IOException;
-            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
+            channel.basicConsume(queueName, false, deliverCallback, consumerTag -> {});
         } catch (IOException e) {
             System.err.println("Error: failed to consume message!");
         }

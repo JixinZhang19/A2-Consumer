@@ -11,8 +11,8 @@ import java.util.concurrent.*;
 public class ConsumerManager {
 
     // todo: tuning QUEUE_COUNT and CONSUMER_PER_QUEUE
-    private static final int QUEUE_COUNT = 500; // 与 server 一致
-    private static final int CONSUMER_PER_QUEUE = 1;
+    private static final int QUEUE_COUNT = 100; // align with server side
+    private static final int CONSUMER_PER_QUEUE = 3; // 增加每个 queue 的 deliver rate
     private static final int CONSUMER_COUNT = QUEUE_COUNT * CONSUMER_PER_QUEUE;
     private static final String HOST = "localhost";
 
