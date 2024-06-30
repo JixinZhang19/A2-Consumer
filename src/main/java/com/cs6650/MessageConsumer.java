@@ -1,3 +1,5 @@
+package com.cs6650;
+
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -30,7 +32,7 @@ public class MessageConsumer implements Runnable {
             Channel channel = connection.createChannel();
             // 多消费者时公平性保证，增加整体的 deliver rate
             // todo: tuning prefetchSize
-            channel.basicQos(10);
+            channel.basicQos(20);
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), StandardCharsets.UTF_8);

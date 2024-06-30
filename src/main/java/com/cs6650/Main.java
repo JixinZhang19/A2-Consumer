@@ -1,3 +1,5 @@
+package com.cs6650;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 

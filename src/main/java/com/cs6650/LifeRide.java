@@ -1,3 +1,5 @@
+package com.cs6650;
+
 /**
  * @author Rebecca Zhang
  * Created on 2024-06-23
