@@ -30,8 +30,7 @@ public class MessageConsumer implements Runnable {
     public void run() {
         try {
             Channel channel = connection.createChannel();
-            // 多消费者时公平性保证，增加整体的 deliver rate
-            // todo: tuning prefetchSize
+            // Fairness guarantee for multiple consumers
             channel.basicQos(20);
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -45,7 +44,6 @@ public class MessageConsumer implements Runnable {
                 }
             };
 
-            // String basicConsume(String queueName, boolean autoAck, DeliverCallback deliverCallback, CancelCallback cancelCallback) throws IOException;
             channel.basicConsume(queueName, false, deliverCallback, consumerTag -> {});
         } catch (IOException e) {
             System.err.println("Error: failed to consume message!");
@@ -53,7 +51,7 @@ public class MessageConsumer implements Runnable {
     }
 
     private void processMessage(String message) {
-        // 实现消息处理逻辑
+        // Implement business logic
         LifeRide lifeRide = gson.fromJson(message, LifeRide.class);
         hashMap.put(lifeRide.skierID, lifeRide);
     }

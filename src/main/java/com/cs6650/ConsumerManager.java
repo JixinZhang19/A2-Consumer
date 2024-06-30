@@ -12,11 +12,10 @@ import java.util.concurrent.*;
  */
 public class ConsumerManager {
 
-    // todo: tuning QUEUE_COUNT and CONSUMER_PER_QUEUE
-    private static final int QUEUE_COUNT = 100; // align with server side
-    private static final int CONSUMER_PER_QUEUE = 2; // 增加每个 queue 的 deliver rate
+    private static final int QUEUE_COUNT = 100; // Align with server side
+    private static final int CONSUMER_PER_QUEUE = 3; // Increase the delivery rate
     private static final int CONSUMER_COUNT = QUEUE_COUNT * CONSUMER_PER_QUEUE;
-    private static final String HOST = "52.43.7.237"; // change to rabbitmq's ip
+    private static final String HOST = "54.189.167.171"; // Change to rabbitmq's ip
     private static final String USER = "admin";
     private static final String PASSWORD = "123456";
 
@@ -61,7 +60,7 @@ public class ConsumerManager {
         }
 
         try {
-            // 所有与之相关的 channel 会自动关闭
+            // All channels associated with the connection will automatically close
             connection.close();
         } catch (Exception e) {
             System.err.println("Error: failed to close RabbitMQ connection!");
