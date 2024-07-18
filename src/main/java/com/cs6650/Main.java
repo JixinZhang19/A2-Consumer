@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
  */
 public class Main {
 
+    // todo: 异常处理
     public static void main(String[] args) throws Exception {
 
         ConsumerManager manager = new ConsumerManager();

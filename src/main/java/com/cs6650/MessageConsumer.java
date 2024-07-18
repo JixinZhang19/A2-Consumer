@@ -7,23 +7,29 @@ import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Rebecca Zhang
  * Created on 2024-06-26
  */
+// todo: queue 大量堆积 ->
+//  client 端拦截器
+//  增加 consumer 数量和 prefetch 数
+//  提高 consumer instance 的性能
+//  提高 DB instance 的性能
+//  写入确认级别：WriteConcern.UNACKNOWLEDGED
+//  消息消费确认：auto ack
 public class MessageConsumer implements Runnable {
 
     private static final Gson gson = new Gson();
     private final Connection connection;
     private final String queueName;
-    private final ConcurrentHashMap<Integer, LifeRide> hashMap;
+    private final MongoDBConnector mongoDBConnector;
 
-    public MessageConsumer(Connection connection, String queueName, ConcurrentHashMap<Integer, LifeRide> hashMap) {
+    public MessageConsumer(Connection connection, String queueName, MongoDBConnector mongoDBConnector) {
         this.connection = connection;
         this.queueName = queueName;
-        this.hashMap = hashMap;
+        this.mongoDBConnector = mongoDBConnector;
     }
 
     @Override
@@ -53,7 +59,7 @@ public class MessageConsumer implements Runnable {
     private void processMessage(String message) {
         // Implement business logic
         LifeRide lifeRide = gson.fromJson(message, LifeRide.class);
-        hashMap.put(lifeRide.skierID, lifeRide);
+        mongoDBConnector.insertLifeRide(lifeRide);
     }
 
 }
