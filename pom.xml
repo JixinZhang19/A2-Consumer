@@ -49,6 +49,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}-${project.version}-A3-Consumer-Branch</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

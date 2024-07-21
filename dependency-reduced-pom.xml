@@ -5,6 +5,7 @@
   <artifactId>A2-Consumer</artifactId>
   <version>1.0-SNAPSHOT</version>
   <build>
+    <finalName>${project.artifactId}-${project.version}-A3-Consumer-Branch</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>

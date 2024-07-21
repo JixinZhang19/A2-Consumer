@@ -12,13 +12,6 @@ import java.nio.charset.StandardCharsets;
  * @author Rebecca Zhang
  * Created on 2024-06-26
  */
-// todo: queue 大量堆积 ->
-//  client 端拦截器
-//  增加 consumer 数量和 prefetch 数
-//  提高 consumer instance 的性能
-//  提高 DB instance 的性能
-//  写入确认级别：WriteConcern.UNACKNOWLEDGED
-//  消息消费确认：auto ack
 public class MessageConsumer implements Runnable {
 
     private static final Gson gson = new Gson();

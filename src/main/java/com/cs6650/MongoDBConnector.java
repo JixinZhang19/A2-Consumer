@@ -23,14 +23,8 @@ public class MongoDBConnector implements AutoCloseable {
     private final MongoCollection<Document> collection;
 
     public MongoDBConnector(String connectionString, String databaseName, String collectionName) throws MongoException {
-        /**
-         * MongoClient 内部维护了一个连接池，可以处理多个并发请求，会自动管理连接的创建、复用和释放
-         * 内置连接池配置
-         * minSIze: 保持足够的最小连接数以应对突发流量
-         * maxSize: 设置为线程数，确保每个线程都能获得连接
-         * maxConnectionIdleTime: 回收空闲线程
-         * maxConnectionLifeTime: 限制连接的最大生命周期，有助于防止连接过期
-         */
+        // MongoClient maintains an internal connection pool that can handle multiple concurrent requests
+        // and automatically manages the creation, reuse, and release of connections
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(connectionString))
                 .applyToConnectionPoolSettings(builder ->
@@ -39,11 +33,13 @@ public class MongoDBConnector implements AutoCloseable {
                                 .maxConnectionIdleTime(180000, TimeUnit.MILLISECONDS)
                                 .maxConnectionLifeTime(300000, TimeUnit.MILLISECONDS)
                 )
-                .writeConcern(WriteConcern.UNACKNOWLEDGED) // W0 不等待写入确认，风险较高；W1 等待主节点确认写入操作完成（默认写关注级别）
+                .writeConcern(WriteConcern.UNACKNOWLEDGED)
                 .build();
         mongoClient = MongoClients.create(settings);
         database = mongoClient.getDatabase(databaseName);
-        // 先检查后创建机制，原子性：并发插入时，第一个到达的请求会创建集合并插入数据，其他并发请求等待集合创建完成，再继续插入操作
+        // Check-before-create mechanism (atomicity: when inserting concurrently, the first arriving request creates
+        // the collection and inserts the data, and other concurrent requests wait for the collection to be created
+        // before continuing the insertion operation
         collection = database.getCollection(collectionName);
     }
 

@@ -15,10 +15,10 @@ public class ConsumerManager {
     private static final int QUEUE_COUNT = 100; // Align with server side
     private static final int CONSUMER_PER_QUEUE = 3; // Increase the delivery rate
     private static final int CONSUMER_COUNT = QUEUE_COUNT * CONSUMER_PER_QUEUE;
-    private static final String HOST = "localhost"; // Change to rabbitmq's ip
+    private static final String HOST = "18.236.131.170"; // Change to rabbitmq's ip
     private static final String USER = "admin";
     private static final String PASSWORD = "123456";
-    private static final String MG_CONNECTION = "mongodb://localhost:27017";
+    private static final String MG_CONNECTION = "mongodb://34.212.148.104:27017"; // Change to MongoDb's ip
     private static final String MG_DATABASE = "skier";
     private static final String MG_COLLECTION = "liferide";
 
@@ -29,8 +29,8 @@ public class ConsumerManager {
     public ConsumerManager() throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(HOST);
-        // factory.setUsername(USER);
-        // factory.setPassword(PASSWORD);
+        factory.setUsername(USER);
+        factory.setPassword(PASSWORD);
 
         this.connection = factory.newConnection();
         this.executorService = Executors.newFixedThreadPool(CONSUMER_COUNT);
